@@ -1,0 +1,32 @@
+{% extends "webapp/basic.html" %}
+
+{% block content %}
+<text>Aggregated</text></br>
+<text>Urban-Rural</text>
+
+<form method="POST" name="urbanruralForm" action="/nonquery/urbanrural/avgtripUR">
+{% csrf_token %}
+	<select name="urbanrural" id="urbanrural" onchange="changeTextBox();">
+  <option value="0" selected="selected">Choose an option</option>
+  <option value="trippurposewhyto">Count of Trip Based on Purpose</option>
+  <option value="avgtrip">Average Trip Miles</option>
+  <option value="avgtripbystate">Average Trip Miles by State</option>
+<option value="avgtripbyrace">Average Trip Miles by Ethnicity</option>
+<option value="avgtripbyincome">Average Trip Miles by Income</option>
+<option value="avgtriptimebystate">Average Trip Time by State</option>
+<option value="avgtriptimebyrace">Average Trip Time by Ethnicity</option>
+<option value="avgtriptimebyincome">Average Trip Time by Income</option>
+ 
+</select>
+<script type="text/javascript">
+
+function changeTextBox()
+{
+  	var x = document.getElementsByName("urbanruralForm");
+	x[0].submit();
+	
+}
+</script>
+</form>
+{% endblock %}
+

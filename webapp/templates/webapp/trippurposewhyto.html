@@ -1,0 +1,176 @@
+{% extends "webapp/basic.html" %}
+
+{% block content %}
+<text>Aggregated</text></br>
+<text>Urban-Rural</text></br>
+<form method="POST" name="urbanruralForm" action="/nonquery/urbanrural/avgtripUR">
+{% csrf_token %}
+	<select name="urbanrural" id="urbanrural" onchange="changeTextBox();">
+  <option value="0">Choose an option</option>
+  <option value="trippurposewhyto" selected="true">Count of Trip based on Purpose</option>
+  <option value="avgtrip">Average Trip Miles</option>
+  <option value="avgtripbystate">Average Trip Miles by State</option>
+<option value="avgtripbyrace">Average Trip Miles by Ethnicity</option>
+<option value="avgtripbyincome">Average Trip Miles by Income</option>
+<option value="avgtriptimebystate">Average Trip Time by State</option>
+<option value="avgtriptimebyrace">Average Trip Time by Ethnicity</option>
+<option value="avgtriptimebyincome">Average Trip Time by Income</option>
+ 
+</select>
+<script type="text/javascript">
+
+function changeTextBox()
+{
+  	var x = document.getElementsByName("urbanruralForm");
+	x[0].submit();
+	
+}
+</script>
+</form>
+
+<text>Trip Purpose Comparison Urban-Rural (2009)</text>
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;    
+}
+hr { 
+    display: block;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
+	border-top: 5px solid
+} 
+</style>
+<button style="float: right;" onclick="exportTableToCSV('tripPurposseCountUrbanRural2009.csv')">Click for CSV File</button>
+<table style="width:100%">
+<tr>
+<th>Trip Purpose</th>
+<th>Urban</th>
+
+</tr>
+{% for j in result1 %}
+<tr>		
+<td>{{j.whyto}}</td>
+<td>{{j.whyto__count}} </td>
+</tr>
+{% endfor %}
+</table>
+<hr>
+<table style="width:100%">
+<tr>
+<th>Trip Purpose</th>
+<th>Rural</th>
+
+</tr>
+{% for j in result2 %}
+<tr>		
+<td>{{j.whyto}}</td>
+<td>{{j.whyto__count}} </td>
+</tr>
+{% endfor %}
+</table>
+<text>Trip Purpose Comparison Urban-Rural (2017)</text>
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;    
+}
+hr { 
+    display: block;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
+	border-top: 5px solid
+} 
+</style>
+<button style="float: right;" onclick="exportTableToCSV('tripPurposseCountUrbanRural2017.csv')">Click for CSV File</button>
+<table style="width:100%">
+<tr>
+<th>Trip Purpose</th>
+<th>Urban</th>
+
+</tr>
+{% for j in result117 %}
+<tr>		
+<td>{{j.whyto}}</td>
+<td>{{j.whyto__count}} </td>
+</tr>
+{% endfor %}
+</table>
+<hr>
+<table style="width:100%">
+<tr>
+<th>Trip Purpose</th>
+<th>Rural</th>
+
+</tr>
+{% for j in result217 %}
+<tr>		
+<td>{{j.whyto}}</td>
+<td>{{j.whyto__count}} </td>
+</tr>
+{% endfor %}
+</table>
+<script type="text/javascript">
+function downloadCSV(csv, filename) {
+    var csvFile;
+    var downloadLink;
+
+    // CSV file
+    csvFile = new Blob([csv], {type: "text/csv"});
+
+    // Download link
+    downloadLink = document.createElement("a");
+
+    // File name
+    downloadLink.download = filename;
+
+    // Create a link to the file
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+
+    // Hide download link
+    downloadLink.style.display = "none";
+
+    // Add the link to DOM
+    document.body.appendChild(downloadLink);
+
+    // Click download link
+    downloadLink.click();
+}
+function exportTableToCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+    
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+        
+        for (var j = 0; j < cols.length; j++) 
+            row.push(cols[j].innerText);
+        
+        csv.push(row.join(","));        
+    }
+
+    // Download CSV file
+    downloadCSV(csv.join("\n"), filename);
+}
+
+
+
+</script>
+{% endblock %}
+

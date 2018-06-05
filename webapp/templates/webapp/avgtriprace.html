@@ -1,0 +1,176 @@
+{% extends "webapp/basic.html" %}
+
+{% block content %}
+<head>
+    {% load staticfiles %} 
+	
+	<script type="text/javascript" src="{% static 'fusioncharts/js/jquery-3.3.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusioncharts/js/fusioncharts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusioncharts/js/themes/fusioncharts.theme.fint.js' %}"></script>
+	<script type="text/javascript" src="{% static 'fusioncharts/js/fusioncharts-jquery-plugin.js' %}"></script>
+</head>
+<text>Aggregated</text></br>
+<text>Ethnicity</text></br>
+<form method="POST" name="ethnicityForm" action="/nonquery/ethnicity/avgtriprace">
+{% csrf_token %}
+	<select name="ethnicity" id="ethnicity" onchange="changeTextBox();">
+  <option value="0" selected="selected">Choose an option</option>
+  <option value="avgtrip" selected="true">Average Trip Miles</option>
+  <option value="avgtripbystate">Average Trip Miles by State</option>
+<option value="avgtripbyincome">Average Trip Miles by Income</option>
+  <option value="avgtriptime">Average Trip Time</option>
+  <option value="avgtriptimebystate">Average Trip Time by State</option>
+<option value="avgtriptimebyincome">Average trip Time by Income</option>
+ 
+</select>
+<script type="text/javascript">
+
+function changeTextBox()
+{
+  	var x = document.getElementsByName("ethnicityForm");
+	x[0].submit();
+	
+}
+</script>
+</form>
+<div id="collapsible-panels">
+            <h6><a href="1" id ="line">Line Graph(2009)</a></h6>
+			<div class="chart-example" id="chart-containerLine">     </div>
+            <h6><a href="2" id ="bar">Bar Graph(2009)</a></h6>
+            <div class="chart-example" id="chart-containerBar">     </div>
+</div>
+
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;    
+}
+</style>
+<text>Average Miles based on Ethnicity (USA) 2009</text>
+<button style="float: right;" onclick="exportTableToCSV('avgtripbyraceUSA.csv')">Click for CSV File</button>
+<table id="dataTable" style="width:100%">
+<tr>
+<th>Ethniciy</th>
+<th> Average trip miles</th>
+
+</tr>
+
+{% for c in result %}
+<tr>
+<td>{{ethnicityV|get_item:c.hh_race}}</td>
+<td>{{c.trpmiles__avg}}	miles</td>
+</tr>	 
+{% endfor %}
+</table>
+<br></br>
+<text>Average Miles based on Ethnicity (USA) 2017</text>
+<table id="dataTable17" style="width:100%">
+<tr>
+<th>Ethniciy</th>
+<th> Average trip miles</th>
+
+</tr>
+
+{% for c in result17 %}
+<tr>
+<td>{{ethnicityV|get_item:c.hh_race}}</td>
+<td>{{c.trpmiles__avg}}	miles</td>
+</tr>	 
+{% endfor %}
+</table>
+<script type="text/javascript">
+function convertChartLine(){	
+var getTabularData = function () {
+        var table = document.getElementById('dataTable'),
+            rows = table.children[0].children,
+            row,
+            i,
+            length,
+            data = [];
+       // get the table element and iterate over its children and extract the data
+        for (i = 1, length = rows.length; i < length; i++) {
+            
+            row = rows[i];
+            data.push({
+                label: row.children[0].innerHTML,
+                value: row.children[1].innerHTML
+            });
+        }
+        
+        return data;
+    };    
+        var revenueChart = new FusionCharts({
+        type: 'line',
+        renderAt: 'chart-containerLine',
+        width: '1000',
+        height: '450',
+        dataFormat: 'json',
+        id: 'line-chart',
+        dataSource: {
+            "chart": {
+                "caption": "Average Trip Miles by Ethnicity",
+                "subCaption": "",
+                "xAxisName": "Ethnicity",
+                "yAxisName": "Average Trip Miles",
+                "numberPrefix": "",
+                "theme": "fint",
+                "rotateValues": "1",
+                "exportEnabled": "1"
+            },
+            "data": getTabularData()
+        }
+    });
+    revenueChart.render();
+}
+function convertChartBar(){	
+var getTabularData = function () {
+        var table = document.getElementById('dataTable'),
+            rows = table.children[0].children,
+            row,
+            i,
+            length,
+            data = [];
+       // get the table element and iterate over its children and extract the data
+        for (i = 1, length = rows.length; i < length; i++) {
+            
+            row = rows[i];
+            data.push({
+                label: row.children[0].innerHTML,
+                value: row.children[1].innerHTML
+            });
+        }
+        
+        return data;
+    };    
+        var revenueChart = new FusionCharts({
+        type: 'column2D',
+        renderAt: 'chart-containerBar',
+        width: '1000',
+        height: '450',
+        dataFormat: 'json',
+        id: 'bar-chart',
+        dataSource: {
+            "chart": {
+                "caption": "Average Trip Miles by Ethnicity",
+                "subCaption": "",
+                "xAxisName": "Ethnicity",
+                "yAxisName": "Average Trip Miles",
+                "numberPrefix": "",
+                "theme": "fint",
+                "rotateValues": "1",
+                "exportEnabled": "1"
+            },
+            "data": getTabularData()
+        }
+    });
+    revenueChart.render();
+
+}
+</script>
+<script type="text/javascript" src="{% static 'personal/js/functions.js' %}"></script>
+{% endblock %}
+

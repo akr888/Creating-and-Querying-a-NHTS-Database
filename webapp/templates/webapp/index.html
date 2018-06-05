@@ -1,0 +1,16 @@
+{% extends "webapp/basic.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>State-Vehicle Count Chart</title>
+    {% load staticfiles %} 
+    <script type="text/javascript" src="{% static 'fusioncharts/js/fusioncharts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusioncharts/js/themes/fusioncharts.theme.fint.js' %}"></script>
+  </head>
+  <body>
+    <div id="chart-1">{{ output|safe }}</div>
+  </body>
+</html>
+{% endblock %}

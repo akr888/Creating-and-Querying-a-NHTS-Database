@@ -1,0 +1,26 @@
+{% extends "webapp/basic.html" %}
+
+{% block content %}
+<text>Weighted Values</text>
+
+<form method="POST" name="aggregateForm" action="/nonquery/weightedurbanrural">
+{% csrf_token %}
+	<select name="allaggregate" id="allaggregate" onchange="changeTextBox();">
+  <option value="0" selected="selected">Choose an option</option>
+  <option value="urbanrural">Urban-Rural</option>
+  <option value="ethnicity">Ethnicity</option>
+  <option value="state">State</option>
+</select>
+<script type="text/javascript">
+
+function changeTextBox()
+{
+    
+	var x = document.getElementsByName("aggregateForm");
+	x[0].submit();
+	
+}
+</script>
+</form>
+{% endblock %}
+

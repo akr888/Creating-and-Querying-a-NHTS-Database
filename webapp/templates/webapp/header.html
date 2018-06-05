@@ -1,0 +1,89 @@
+{% extends "webapp/basic.html" %}
+
+{%block content%}
+	<html>
+<body>	
+<style>
+div.fixed {
+    position: fixed;
+    width: 1500px;
+	left: 280px;
+    border: 3px solid #73AD21;
+}
+</style>
+<form method="POST" name = "nonQuery" action="nonquery/">
+{% csrf_token %}
+<div class="col-sm-10">
+  <select name="allFiles" id="allFiles" onchange="changeTextBox();">
+  <option value="0" selected="selected">Choose an option</option>
+  <option value="aggregated">Aggregated</option>
+  <option value="directQuery"> Raw Query </option>
+  <option value="weightedA"> Weighted Aggregated </option>
+  
+</select>
+<script type="text/javascript">
+
+function changeTextBox()
+{
+    if (document.getElementById("allFiles").value!="directQuery") {
+        document.getElementById("queryBox").disabled='true';
+		document.getElementById("submit").disabled='true';
+    } else {
+        document.getElementById("queryBox").disabled='';
+    }
+	if(document.getElementById("allFiles").value=='individual' || document.getElementById('allFiles').value=='aggregated'|| document.getElementById('allFiles').value=='weightedA'){
+	var x = document.getElementsByName("nonQuery");
+	x[0].submit();
+	}
+	
+}
+</script>
+</form>
+<br></br>
+<br></br>
+<br></br>
+
+<div class="fixed">
+<form method="POST" name = "query" action="output/">
+{% csrf_token %}
+<p> Query box</p>
+<textarea name="queryBox" id = "queryBox" disabled='true' placeholder='Type query related to any of the data files listed' style="width:1495px;height:200px;" onkeyup="stoppedTyping()"></textarea>
+<script type="text/javascript">
+   function stoppedTyping(){
+        if(queryBox.value.length > 0) { 
+            document.getElementById('submit').disabled = false; 
+        } else { 
+            document.getElementById('submit').disabled = true;
+        }
+    }
+	</script>
+<p></p>
+
+ <input type="submit" id ="submit" value="Submit" onclick="verify()" disabled>
+<script type="text/javascript">
+    function verify(){
+        if myText is empty{
+            alert "Put some text in there!"
+            return
+        }
+        else{
+            do button functionality
+        }
+    }
+
+</script>
+
+
+</form>
+			<div class='container-fluid'>
+			
+		  </div>
+</div> 
+	
+	
+</div>	
+	</div>
+</body>
+
+</html>
+{% endblock %}

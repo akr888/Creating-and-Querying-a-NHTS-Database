@@ -1,0 +1,158 @@
+{% extends "webapp/basic.html" %}
+
+{% block content %}
+<text>Aggregated</text></br>
+<text>Urban-Rural</text></br>
+<head>
+    {% load staticfiles %} 
+	
+	<script type="text/javascript" src="{% static 'fusioncharts/js/jquery-3.3.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusioncharts/js/fusioncharts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusioncharts/js/themes/fusioncharts.theme.fint.js' %}"></script>
+	<script type="text/javascript" src="{% static 'fusioncharts/js/fusioncharts-jquery-plugin.js' %}"></script>
+	
+</head>
+<form method="POST" name="urbanruralForm" action="/nonquery/urbanrural/avgtripUR">
+{% csrf_token %}
+<select name="urbanrural" id="urbanrural" onchange="changeTextBox();">
+<option value="0" selected="selected">Choose an option</option>
+ <option value="trippurposewhyto">Count of Trip based on Purpose</option>
+<option value="avgtrip" >Average Trip Miles</option>
+<option value="avgtripbystate">Average Trip Miles by State</option>
+<option value="avgtripbyrace" >Average Trip Miles by Ethnicity</option>
+<option value="avgtripbyincome" selected="true">Average Trip Miles by Income</option>
+<option value="avgtriptimebystate">Average Trip Time by State</option>
+<option value="avgtriptimebyrace">Average Trip Time by Ethnicity</option>
+<option value="avgtriptimebyincome">Average Trip Time by Income</option>
+ 
+</select>
+<script type="text/javascript">
+
+function changeTextBox()
+{
+  	var x = document.getElementsByName("urbanruralForm");
+	x[0].submit();
+	
+}
+</script>
+</form>
+<div id="collapsible-panels">
+            <h6><a href="1" id ="line">Graph(2009)</a></h6>
+			<div class="chart-example" style="width:100%" id="chart-containerLine">     </div>
+            
+</div>
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;    
+}
+</style>
+<text>Average Miles based on Income(USA 2009)</text>
+<button style="float: right;" onclick="exportTableToCSV('avgTripMilesbyIncomeUrbanRural2009.csv')">Click for CSV File</button>
+<table style="width:100%" id="dataTable" >
+<tr>
+<th>Income</th>
+<th>Urban</th>
+<th>Rural</th>
+</tr>
+{% for j,k in result %}
+<tr>		
+<td>{{incomeV|get_item:j.hhfaminc}}</td>
+<td>{{j.trpmiles__avg}} miles</td>
+<td>{{k.trpmiles__avg}} miles</td>
+</tr>
+{% endfor %}
+</table>
+
+<br></br>
+
+<text>Average Miles based on Income(USA 2017)</text>
+
+<table style="width:100%" id="dataTable17" >
+<tr>
+<th>Income</th>
+<th>Urban</th>
+<th>Rural</th>
+</tr>
+{% for j,k in result17 %}
+<tr>		
+<td>{{incomeV|get_item:j.hhfaminc}}</td>
+<td>{{j.trpmiles__avg}} miles</td>
+<td>{{k.trpmiles__avg}} miles</td>
+</tr>
+{% endfor %}
+</table>
+
+
+<script type="text/javascript">
+function convertChartLine(){
+  // this function extracts data from the table and converts into a data structure understandable by FusionCharts constructor.
+  // Both categories and datasets are returned by this function which will be used for creating the charts
+  var getTabularData = function() {
+    var table = document.getElementById('dataTable'),
+      rows = table.children[0].children,
+      row,
+      i,
+      length,
+      data2011 = [],
+      data2012 = [],
+      categories = [];
+    // get the table element and iterate over its children and extract the data
+    // start scraping data from the data rows in the table, ignoring the header rows
+    for (i = 1, length = rows.length; i < length; i++) {
+      row = rows[i];
+      categories.push({
+        label: row.children[0].innerHTML
+      });
+      data2011.push({
+        value: row.children[1].innerHTML
+      });
+      data2012.push({
+        value: row.children[2].innerHTML
+      });
+   }
+    return {
+      categories: categories,
+      dataset: [{
+        seriesname: rows[0].children[1].innerHTML,
+        data: data2011
+      }, {
+        seriesname: rows[0].children[2].innerHTML,
+        data: data2012
+      }]
+    };
+  };
+  var data = getTabularData();
+    var revenueChart = new FusionCharts({
+      type: 'mscolumn2d',
+      renderAt: 'chart-containerLine',
+      width: '1200',
+      height: '450',
+      dataFormat: 'json',
+      id: '2D-chart',
+      dataSource: {
+        "chart": {
+          "caption": "Average Trip Miles by Income",
+        "xAxisName": "Income",
+        "yAxisName": "Average Trip Miles",
+          "numberPrefix": "",
+          "theme": "fint",
+          "rotateValues": "1",
+          "exportEnabled": "1"
+        },
+        "categories": [{
+          "category": data.categories
+        }],
+        "dataset": data.dataset
+      }
+    });
+    revenueChart.render();
+}
+</script>
+<script type="text/javascript" src="{% static 'personal/js/functions.js' %}"></script>
+{% endblock %}
+

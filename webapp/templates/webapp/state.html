@@ -1,0 +1,28 @@
+{% extends "webapp/basic.html" %}
+
+{% block content %}
+<text>Aggregated</text></br>
+<text>State</text>
+
+<form method="POST" name="stateForm" action="/nonquery/state/stateaction">
+{% csrf_token %}
+	<select name="state" id="state" onchange="changeTextBox();">
+  <option value="0" selected="selected">Choose an option</option>
+  <option value="totalvehcount">Total Vehicle Count</option>
+  <option value="avgtripmilesbystate">Average Trip Miles by State</option>
+<option value="avgtriptimebystate">Average Trip Time by State</option>
+
+ 
+</select>
+<script type="text/javascript">
+
+function changeTextBox()
+{
+  	var x = document.getElementsByName("stateForm");
+	x[0].submit();
+	
+}
+</script>
+</form>
+{% endblock %}
+

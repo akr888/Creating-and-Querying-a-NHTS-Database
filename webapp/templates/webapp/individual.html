@@ -1,0 +1,34 @@
+{% extends "webapp/basic.html" %}
+{% block content %}
+<html>
+<body>
+	<div class="col-sm-10">
+	
+	<select name="allHouseid" id="allHouseid" onchange="changeTextBox();">
+	{% for c in user%}
+        <option>{{c.houseid}}</option>
+	    
+	{% endfor %}
+	</select>
+
+<script type="text/javascript">
+
+function changeTextBox()
+{
+    if (document.getElementById("allFiles").value!="directQuery") {
+        document.getElementById("queryBox").disabled='true';
+		document.getElementById("submit").disabled='true';
+    } else {
+        document.getElementById("queryBox").disabled='';
+    }
+	if(document.getElementById("allFiles").value=='individual' || document.getElementById('allFiles').value=='aggregated'){
+	var x = document.getElementsByName("nonQuery");
+	x[0].submit();
+	}
+	
+}
+</script>	 
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "webapp/basic.html" %}
+
+{% block content %}
+<text>Aggregated</text></br>
+<text>Ethnicity</text>
+
+<form method="POST" name="ethnicityForm" action="/nonquery/ethnicity/avgtriprace">
+{% csrf_token %}
+	<select name="ethnicity" id="ethnicity" onchange="changeTextBox();">
+  <option value="0" selected="selected">Choose an option</option>
+  <option value="avgtrip">Average Trip Miles</option>
+  <option value="avgtripbystate">Average Trip Miles by State</option>
+<option value="avgtripbyincome">Average Trip Miles by Income</option>
+  <option value="avgtriptime">Average Trip Time</option>
+  <option value="avgtriptimebystate">Average Trip Time by State</option>
+<option value="avgtriptimebyincome">Average trip Time by Income</option>
+ 
+</select>
+<script type="text/javascript">
+
+function changeTextBox()
+{
+  	var x = document.getElementsByName("ethnicityForm");
+	x[0].submit();
+	
+}
+</script>
+</form>
+{% endblock %}
+
